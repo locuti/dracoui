@@ -1,0 +1,9 @@
+.env
+.npm
+node_modules
+bower_components
+certs
+build
+.publish
+src/assets/css/*.css
+debug.log
