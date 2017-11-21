@@ -110,7 +110,6 @@ function startListenToSocket() {
         console.log("Creature caught");
         console.log(msg);
         var creature = msg.creature;
-        creature.name++; // 0 base in game, 1 base in assset
         if (msg.position) {
             creature.lat = msg.position.lat;
             creature.lng = msg.position.lng;

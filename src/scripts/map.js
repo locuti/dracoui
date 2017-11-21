@@ -307,7 +307,7 @@ Map.prototype.displayCreatureList = function(all, sortBy, eggs) {
         var transferClass = elt.favorite ? "hide" : "";
         var candyStyle = elt.canEvolve ? "" : "style='display:none'";
         var fav = elt.favorite ? "set" : "unset";
-        var creatureId = String(elt.name + 1);
+        var creatureId = String(elt.name);
         creatureId = '0'.repeat(3 - creatureId.length) + creatureId;
         div.append(`
             <div class="pokemon ${elt.isBad ? 'bad': ''}">
