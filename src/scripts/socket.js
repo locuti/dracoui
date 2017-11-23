@@ -160,24 +160,7 @@ function startListenToSocket() {
     });
     socket.on("eggs_list", msg => {
         console.log(msg);
-        msg.km_walked = msg.km_walked || 0;
-        var incubators = msg.egg_incubators.filter(i => i.target_km_walked != 0 || i.start_km_walked != 0);
-        incubators = Array.from(incubators, i => {
-            return {
-                type: i.item_id == 901 ? "incubator-unlimited" : "incubator",
-                totalDist: i.target_km_walked - i.start_km_walked,
-                doneDist: msg.km_walked - i.start_km_walked
-            }
-        });
-        var eggsInIncub = Array.from(msg.egg_incubators, i => i.pokemon_id);
-        var eggs = Array.from(msg.eggs.filter(e => eggsInIncub.indexOf(e.id) < 0), i => {
-            return {
-                type: "egg",
-                totalDist: i.egg_km_walked_target,
-                doneDist: i.egg_km_walked_start
-            }
-        });
-        global.map.displayEggsList(incubators.concat(eggs));
+        global.map.displayEggsList(msg.eggs, msg.max);
     });
     socket.on("route", route => {
         // console.log("New route received");

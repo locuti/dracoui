@@ -328,19 +328,21 @@ Map.prototype.displayCreatureList = function(all, sortBy, eggs) {
     $(".inventory").show().addClass("active");
 }
 
-Map.prototype.displayEggsList = function(eggs) {
+Map.prototype.displayEggsList = function(eggs, max) {
     console.log("Eggs list");
     global.active = "eggs";
     $(".inventory .sort").hide();
-    $(".inventory .numberinfo").text(eggs.length + "/9");
+    $(".inventory .numberinfo").text(eggs.length + '/' + max);
     var div = $(".inventory .data");
     div.html("");
     eggs.forEach(function(elt) {
         if (elt) {
+            var img = elt.eggType;
+            if (elt.incubatorId !== null) img = 18;
             div.append(`
                 <div class="egg">
-                    <span class="imgspan"><img src="./assets/inventory/${elt.type}.png" /></span>
-                    <span>${elt.doneDist.toFixed(1)} / ${elt.totalDist.toFixed(1)} km</span>
+                    <span class="imgspan"><img src="./assets/inventory/${img}.png" /></span>
+                    <span>${(elt.passedDistance/1000).toFixed(1)} / ${(elt.totalDistance / 1000).toFixed(1)} km</span>
                 </div>
             `);
         }
