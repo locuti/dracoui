@@ -7,12 +7,17 @@ var Map = function(parentDiv) {
     var toner = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png');
     var watercolor = L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg');
 
-    this.layerStops = new L.LayerGroup();
+    this.layerPillars = new L.LayerGroup();
+    this.layerArenas = new L.LayerGroup();
+    this.layerLibraries = new L.LayerGroup();
+    this.layerObelisks = new L.LayerGroup();
+    this.layerPortals = new L.LayerGroup();
+    this.layerAltars = new L.LayerGroup();
     this.layerCatches = L.markerClusterGroup({ maxClusterRadius: 30 });
     this.layerPath = new L.LayerGroup();
 
     this.map = L.map(parentDiv, {
-        layers: [osm, this.layerStops, this.layerCatches, this.layerPath]
+        layers: [osm, this.layerPillars, this.layerArenas, this.layerLibraries, this.layerObelisks, this.layerPortals, this.layerCatches, this.layerAltars, this.layerCatches, this.layerPath]
     });
 
    var baseLayers = {
@@ -24,7 +29,12 @@ var Map = function(parentDiv) {
     };
     var overlays = {
         "Path": this.layerPath,
-        "Stops": this.layerStops,
+        "Pillars": this.layerPillars,
+        "Arenas": this.layerArenas,
+        "Libraries": this.layerLibraries,
+        "Obelisks": this.layerObelisks,
+        "Portals": this.layerPortals,
+        "Altars": this.layerAltars,
         "Catches": this.layerCatches
     };
 
@@ -49,12 +59,17 @@ var Map = function(parentDiv) {
 
     this.steps = [];
     this.catches = [];
-    this.stops = [];
+    this.pillars = [];
+    this.arenas = [];
+    this.libraries = [];
+    this.obelisks = [];
+    this.portals = [];
+    this.altars = [];
     this.creatureList = [];
 };
 
 Map.prototype.saveContext = function() {
-    var stops = Array.from(this.stops, p => {
+    var pillars = Array.from(this.pillars, p => {
         return {
             id: p.id,
             lat: p.lat,
@@ -66,7 +81,7 @@ Map.prototype.saveContext = function() {
     sessionStorage.setItem("available", true);
     sessionStorage.setItem("steps", JSON.stringify(this.steps));
     sessionStorage.setItem("catches", JSON.stringify(this.catches));
-    sessionStorage.setItem("stops", JSON.stringify(stops));
+    sessionStorage.setItem("pillars", JSON.stringify(pillars));
 }
 
 Map.prototype.loadContext = function() {
@@ -76,11 +91,15 @@ Map.prototype.loadContext = function() {
 
             this.steps = JSON.parse(sessionStorage.getItem("steps")) || [];
             this.catches = JSON.parse(sessionStorage.getItem("catches")) || [];
-            this.stops = JSON.parse(sessionStorage.getItem("stops")) || [];
+            this.pillars = JSON.parse(sessionStorage.getItem("pillars")) || [];
 
             if (this.steps.length > 0) this.initPath();
 
-            this.initStops();
+            this.initPillars();
+            this.initArenas();
+            this.initLibraries();
+            this.initObelisks();
+            this.initPortals();
             this.initCatches();
 
             sessionStorage.setItem("available", false);
@@ -121,12 +140,48 @@ Map.prototype.initCatches = function() {
     }
 }
 
-Map.prototype.initStops = function() {
-    for (var i = 0; i < this.stops.length; i++) {
-        var pt = this.stops[i];
+Map.prototype.initPillars = function() {
+    for (var i = 0; i < this.pillars.length; i++) {
+        var pt = this.pillars[i];
         var iconurl = pt.visited ? `./assets/img/pokestop_visited.png` : `./assets/img/pokestop_available.png`;
         var icon = L.icon({ iconUrl: iconurl, iconSize: [40, 40], iconAnchor: [20, 20]});
-        pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerStops);
+        pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerPillars);
+    }
+}
+
+Map.prototype.initArenas = function() {
+    for (var i = 0; i < this.arenas.length; i++) {
+        var pt = this.arenas[i];
+        var iconurl = `./assets/buildings/arena.png`;
+        var icon = L.icon({ iconUrl: iconurl, iconSize: [40, 40], iconAnchor: [20, 20]});
+        pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerArenas);
+    }
+}
+
+Map.prototype.initLibraries = function() {
+    for (var i = 0; i < this.libraries.length; i++) {
+        var pt = this.libraries[i];
+        var iconurl = `./assets/buildings/library.png`;
+        var icon = L.icon({ iconUrl: iconurl, iconSize: [40, 40], iconAnchor: [20, 20]});
+        pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerLibraries);
+    }
+}
+
+Map.prototype.initObelisks = function() {
+    for (var i = 0; i < this.obelisks.length; i++) {
+        var pt = this.obelisks[i];
+        var iconurl = `./assets/buildings/obelisk.png`;
+        var icon = L.icon({ iconUrl: iconurl, iconSize: [40, 40], iconAnchor: [20, 20]});
+        pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerObelisks);
+    }
+}
+
+Map.prototype.initPortals = function() {
+    for (var i = 0; i < this.portals.length; i++) {
+        var pt = this.portals[i];
+        var iconurl = `./assets/buildings/portal.png`;
+        var icon = L.icon({ iconUrl: iconurl, iconSize: [40, 40], iconAnchor: [20, 20]});
+        pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerPortals);
     }
 }
 
@@ -180,12 +235,12 @@ Map.prototype.addCatch = function(pt) {
 Map.prototype.addVisitedBuilding = function(pt) {
     if (!pt.lat) return;
 
-    var ps = this.stops.find(ps => ps.id == pt.id);
+    var ps = this.pillars.find(ps => ps.id == pt.id);
     if (!ps) {
-        this.stops.push(pt);
+        this.pillars.push(pt);
         ps = pt;
         var icon = L.icon({ iconUrl: `./assets/img/pokestop_cooldown.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
-        pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerStops);
+        pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerPillars);
     } else {
         Object.assign(ps, pt);
     }
@@ -201,9 +256,9 @@ Map.prototype.addVisitedBuilding = function(pt) {
 Map.prototype.addBuildings = function(forts) {
     for(var i = 0; i < forts.length; i++) {
         var pt = forts[i];
-        var ps = this.stops.find(ps => ps.id == pt.id);
+        var ps = this.pillars.find(ps => ps.id == pt.id);
         if (ps) pt = Object.assign(ps, pt);
-        else this.stops.push(pt);
+        else this.pillars.push(pt);
 
         var icon = "pokestop_available";
         if (pt.cooldown) {
@@ -216,7 +271,7 @@ Map.prototype.addBuildings = function(forts) {
 
         if (!pt.marker) {
             var icon = L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
-            pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerStops);
+            pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerPillars);
             if (pt.name) pt.marker.bindPopup(pt.name);
             else pt.marker.bindPopup(pt.id);
         } else {
@@ -224,13 +279,121 @@ Map.prototype.addBuildings = function(forts) {
         }
     }
 
-    if (global.config.memory.limit && this.stops.length > global.config.memory.maxPokestops) {
+    if (global.config.memory.limit && this.pillars.length > global.config.memory.maxPokestops) {
         // to much pokestops, remove some starting with unvisited ones
     }
 }
 
+Map.prototype.addArena = function(arenas) {
+    for(var i = 0; i < arenas.length; i++) {
+        var pt = arenas[i];
+        var ps = this.arenas.find(ps => ps.id == pt.id);
+        if (ps) pt = Object.assign(ps, pt);
+        else this.arenas.push(pt);
+
+        var icon = "arena";
+        var ally = pt.arena.allianceType;
+        if(ally){
+            icon += ally===0 ? '_red' : '_blue';
+        }
+
+        if (!pt.marker) {
+            var icon = L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
+            pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerArenas);
+            if (pt.name) pt.marker.bindPopup(pt.name);
+            else pt.marker.bindPopup(pt.id);
+        } else {
+            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
+        }
+    }
+}
+
+Map.prototype.addLibrary = function(libraries) {
+    for(var i = 0; i < libraries.length; i++) {
+        var pt = libraries[i];
+        var ps = this.libraries.find(ps => ps.id == pt.id);
+        if (ps) pt = Object.assign(ps, pt);
+        else this.libraries.push(pt);
+
+        var icon = "library";
+        var ally = pt.arena.allianceType;
+        if(ally){
+            icon += ally===0 ? '_red' : '_blue';
+        }
+
+        if (!pt.marker) {
+            var icon = L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
+            pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerLibraries);
+            if (pt.name) pt.marker.bindPopup(pt.name);
+            else pt.marker.bindPopup(pt.id);
+        } else {
+            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
+        }
+    }
+}
+
+Map.prototype.addObelisk = function(obelisks) {
+    for(var i = 0; i < obelisks.length; i++) {
+        var pt = obelisks[i];
+        var ps = this.obelisks.find(ps => ps.id == pt.id);
+        if (ps) pt = Object.assign(ps, pt);
+        else this.obelisks.push(pt);
+
+        var icon = "obelisk";
+
+        if (!pt.marker) {
+            var icon = L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
+            pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerObelisks);
+            if (pt.name) pt.marker.bindPopup(pt.name);
+            else pt.marker.bindPopup(pt.id);
+        } else {
+            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
+        }
+    }
+}
+
+Map.prototype.addPortal = function(portals) {
+    for(var i = 0; i < portals.length; i++) {
+        var pt = portals[i];
+        var ps = this.portals.find(ps => ps.id == pt.id);
+        if (ps) pt = Object.assign(ps, pt);
+        else this.portals.push(pt);
+
+        var icon = "portal";
+
+        if (!pt.marker) {
+            var icon = L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
+            pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerPortals);
+            if (pt.name) pt.marker.bindPopup(pt.name);
+            else pt.marker.bindPopup(pt.id);
+        } else {
+            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
+        }
+    }
+}
+
+Map.prototype.addAltar = function(altars) {
+    for(var i = 0; i < altars.length; i++) {
+        var pt = altars[i];
+        var ps = this.altars.find(ps => ps.id == pt.id);
+        if (ps) pt = Object.assign(ps, pt);
+        else this.altars.push(pt);
+
+        var icon = "altar";
+
+        if (!pt.marker) {
+            var icon = L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
+            pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerAltars);
+            if (pt.name) pt.marker.bindPopup(pt.name);
+            else pt.marker.bindPopup(pt.id);
+        } else {
+            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
+        }
+    }
+}
+
 // Map.prototype.updatePokestopsStatus = function() {
-//     this.stops.forEach(pt => {
+//     this.pillars.forEach(pt => {
 //         var needUpdate = false;
 //         if (pt.cooldown && moment(pt.cooldown).isBefore()) {
 //             pt.cooldown = null;
@@ -307,20 +470,26 @@ Map.prototype.displayCreatureList = function(all, sortBy, eggs) {
         var transferClass = elt.favorite ? "hide" : "";
         var candyStyle = elt.canEvolve ? "" : "style='display:none'";
         var fav = elt.favorite ? "set" : "unset";
+        var hp = Math.round(elt.hp*100)/100;
         var creatureId = String(elt.name);
         creatureId = '0'.repeat(3 - creatureId.length) + creatureId;
         div.append(`
-            <div class="pokemon ${elt.isBad ? 'bad': ''}">
+            <div class="pokemon ${elt.isBad ? 'bad': ''} ${elt.attackValue==5 && elt.staminaValue == 5 ? 'perfekt': ''}">
                 <div class="transfer" data-id='${elt.id}'>
                     <a title='(Un)Favorite' href="#" class="favoriteAction"><img src="./assets/img/favorite_${fav}.png" /></a>
                     <a title='Transfer' href="#" class="transferAction ${transferClass}"><img src="./assets/img/recyclebin.png" /></a>
                     <a title='Evolve' href="#" class="evolveAction ${evolveStyle}"><img src="./assets/img/evolve.png" /></a>
                 </div>
-                <span class="imgspan ${evolveClass}"><img src="./assets/creatures/${creatureId}.png" /></span>
+                <span class="imgspan ${evolveClass}">
+                    <div class="stat atk">${elt.attackValue}</div>
+                    <div class="stat stam">${elt.staminaValue}</div>
+                    <div class="battle-type"><img src="./assets/img/${elt.isAttacker ? 'Sword' : 'Shild'}_color.png"/></div>
+                    <img src="./assets/creatures/${creatureId}.png" />
+                </span>
                 <span class="name">${elt.display} lvl ${elt.level}</span>
-                <span class="info">CP: <strong>${elt.cp}</strong> IV: <strong>${elt.iv}%</strong></span>
-                <span class="info hide-on-small-only">ATK: <strong>${elt.attackValue}</strong> DEF: <strong>${0}</strong> STA: <strong>${0}</strong></span>
-                <span class="info">Candy: ${elt.candy}<span ${candyStyle}>/${elt.candyToEvolve}</span></span>
+                <span class="info">CP: <strong>${elt.cp}</strong></span>
+                <span class="info">HP:${hp}</span>
+                <span class="info">ID: ${elt.candyType}<span ${candyStyle}>/${elt.candyToEvolve}</span></span>
             </div>
         `);
     });
