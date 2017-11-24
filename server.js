@@ -7,7 +7,7 @@ fastify.register(require('fastify-static'), {
     root: path.join(__dirname, 'src'),
 });
 
-fastify.listen(8000, "0.0.0.0", function() {
+fastify.listen(8080, "0.0.0.0", function() {
     let addr = fastify.server.address();
     console.log("Server listening at ", addr.address + ":" + addr.port);
 });

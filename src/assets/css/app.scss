@@ -129,8 +129,8 @@ body, html, .content {
     opacity: 0;
     transition: top 500ms, opacity 500ms;
 
-    width: 90%;
-    height: 90%;
+    width: 60%;
+    height: 60%;
 
     @media #{$medium-and-down} { width: 95%; height: 80%; }
 
@@ -197,7 +197,7 @@ body, html, .content {
 
 .item {
     box-sizing: border-box;
-    width: percentage(1/10);
+    width: percentage(1/4);
     @media #{$medium-and-down} {  width: percentage(1/3); }
 
     padding: .7em;
@@ -301,11 +301,11 @@ body, html, .content {
     }
     .imgspan .stat.atk {
         border: 2px solid #FFC514;
-        left: 20px;
+        left: 30%;
     }
     .imgspan .stat.stam {
         border: 2px solid #BE2E2C;
-        right: 20px;
+        right: 30%;
     }
     .imgspan .battle-type {
         position: absolute;
@@ -313,7 +313,7 @@ body, html, .content {
         height: 24px;
         border-radius: 50%;
         top: 0;
-        right: 20px;
+        right: 30%;
         text-align: center;
         line-height: 23px;
     }
