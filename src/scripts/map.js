@@ -143,8 +143,8 @@ Map.prototype.initCatches = function() {
 Map.prototype.initPillars = function() {
     for (var i = 0; i < this.pillars.length; i++) {
         var pt = this.pillars[i];
-        var iconurl = pt.visited ? `./assets/img/pokestop_visited.png` : `./assets/img/pokestop_available.png`;
-        var icon = L.icon({ iconUrl: iconurl, iconSize: [40, 40], iconAnchor: [20, 20]});
+        var iconurl = pt.visited ? `./assets/img/stop_visited.png` : `./assets/img/stop_available.png`;
+        var icon = L.icon({ iconUrl: iconurl, iconSize: [30, 30], iconAnchor: [15, 15]});
         pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerPillars);
     }
 }
@@ -239,7 +239,7 @@ Map.prototype.addVisitedBuilding = function(pt) {
     if (!ps) {
         this.pillars.push(pt);
         ps = pt;
-        var icon = L.icon({ iconUrl: `./assets/img/pokestop_cooldown.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
+        var icon = L.icon({ iconUrl: `./assets/img/stop_cooldown.png`, iconSize: [30, 30], iconAnchor: [15, 15] });
         pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerPillars);
     } else {
         Object.assign(ps, pt);
@@ -247,7 +247,7 @@ Map.prototype.addVisitedBuilding = function(pt) {
 
     ps.visited = true;
     if (ps && ps.marker) {
-        ps.marker.setIcon(L.icon({ iconUrl: `./assets/img/pokestop_cooldown.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
+        ps.marker.setIcon(L.icon({ iconUrl: `./assets/img/stop_cooldown.png`, iconSize: [30, 30], iconAnchor: [15, 15] }));
         if (ps.name) ps.marker.bindPopup(ps.name);
         else ps.marker.bindPopup(ps.id);
     }
@@ -260,27 +260,23 @@ Map.prototype.addBuildings = function(forts) {
         if (ps) pt = Object.assign(ps, pt);
         else this.pillars.push(pt);
 
-        var icon = "pokestop_available";
+        var type = "stop_available";
         if (pt.cooldown) {
-            icon = "pokestop_cooldown";
+            type = "stop_cooldown";
         // } else if (pt.lureExpire && moment(pt.lureExpire).isAfter()) {
         //     icon = "pokestop_lure";
         } else if (pt.visited) {
-            icon = "pokestop_visited";
+            type = "stop_visited";
         }
 
         if (!pt.marker) {
-            var icon = L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
+            var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [30, 30], iconAnchor: [15, 15] });
             pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerPillars);
             if (pt.name) pt.marker.bindPopup(pt.name);
             else pt.marker.bindPopup(pt.id);
         } else {
-            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
+            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [30, 30], iconAnchor: [15, 15] }));
         }
-    }
-
-    if (global.config.memory.limit && this.pillars.length > global.config.memory.maxPokestops) {
-        // to much pokestops, remove some starting with unvisited ones
     }
 }
 
@@ -291,19 +287,19 @@ Map.prototype.addArena = function(arenas) {
         if (ps) pt = Object.assign(ps, pt);
         else this.arenas.push(pt);
 
-        var icon = "arena";
+        var type = "arena";
         var ally = pt.arena.allianceType;
-        if(ally){
-            icon += ally===0 ? '_red' : '_blue';
+        if (ally) {
+            type += ally===0 ? '_red' : '_blue';
         }
 
         if (!pt.marker) {
-            var icon = L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
+            var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
             pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerArenas);
             if (pt.name) pt.marker.bindPopup(pt.name);
             else pt.marker.bindPopup(pt.id);
         } else {
-            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
+            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
         }
     }
 }
@@ -315,19 +311,19 @@ Map.prototype.addLibrary = function(libraries) {
         if (ps) pt = Object.assign(ps, pt);
         else this.libraries.push(pt);
 
-        var icon = "library";
+        var type = "library";
         var ally = pt.arena.allianceType;
-        if(ally){
-            icon += ally===0 ? '_red' : '_blue';
+        if (ally) {
+            type += ally===0 ? '_red' : '_blue';
         }
 
         if (!pt.marker) {
-            var icon = L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
+            var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
             pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerLibraries);
             if (pt.name) pt.marker.bindPopup(pt.name);
             else pt.marker.bindPopup(pt.id);
         } else {
-            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
+            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
         }
     }
 }
@@ -339,15 +335,14 @@ Map.prototype.addObelisk = function(obelisks) {
         if (ps) pt = Object.assign(ps, pt);
         else this.obelisks.push(pt);
 
-        var icon = "obelisk";
-
+        var type = "obelisk";
         if (!pt.marker) {
-            var icon = L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
+            var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
             pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerObelisks);
             if (pt.name) pt.marker.bindPopup(pt.name);
             else pt.marker.bindPopup(pt.id);
         } else {
-            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
+            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
         }
     }
 }
@@ -359,15 +354,14 @@ Map.prototype.addPortal = function(portals) {
         if (ps) pt = Object.assign(ps, pt);
         else this.portals.push(pt);
 
-        var icon = "portal";
-
+        var type = "portal";
         if (!pt.marker) {
-            var icon = L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
+            var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
             pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerPortals);
             if (pt.name) pt.marker.bindPopup(pt.name);
             else pt.marker.bindPopup(pt.id);
         } else {
-            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
+            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
         }
     }
 }
@@ -379,43 +373,17 @@ Map.prototype.addAltar = function(altars) {
         if (ps) pt = Object.assign(ps, pt);
         else this.altars.push(pt);
 
-        var icon = "altar";
-
+        var type = "altar";
         if (!pt.marker) {
-            var icon = L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
+            var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
             pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerAltars);
             if (pt.name) pt.marker.bindPopup(pt.name);
             else pt.marker.bindPopup(pt.id);
         } else {
-            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
+            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
         }
     }
 }
-
-// Map.prototype.updatePokestopsStatus = function() {
-//     this.pillars.forEach(pt => {
-//         var needUpdate = false;
-//         if (pt.cooldown && moment(pt.cooldown).isBefore()) {
-//             pt.cooldown = null;
-//             needUpdate = true;
-//         } else if (pt.lureExpire && moment(pt.lureExpire).isBefore()) {
-//             pt.lureExpire = null;
-//             needUpdate = true;
-//         }
-
-//         if (needUpdate) {
-//             var icon = "pokestop_available";
-//             if (pt.cooldown && moment(pt.cooldown).isAfter()) {
-//                 icon = "pokestop_cooldown";
-//             } else if (pt.lureExpire && moment(pt.lureExpire).isAfter()) {
-//                 icon = "pokestop_lure";
-//             } else if (pt.visited) {
-//                 icon = "pokestop_visited";
-//             }
-//             pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${icon}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
-//         }
-//     });
-// }
 
 Map.prototype.setRoute = function(route) {
     var points = Array.from(route, pt => L.latLng(pt.lat, pt.lng));

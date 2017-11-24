@@ -81,8 +81,7 @@ function startListenToSocket() {
     });
     socket.on('buildings', buildings => {
         console.log("Update Buildings");
-        //console.log(buildings);
-        console.log("Update Pillars");
+        console.log(buildings);
         var pillars = Array.from(buildings.filter(b => b.type === 0), f => {
             return {
                 id: f.id,
@@ -94,7 +93,6 @@ function startListenToSocket() {
         });
         global.map.addBuildings(pillars);
 
-        console.log("Update Arenas");
         var arenas = Array.from(buildings.filter(b => b.type === 1), f => {
             return {
                 id: f.id,
@@ -105,7 +103,6 @@ function startListenToSocket() {
         });
         global.map.addArena(arenas);
 
-        console.log("Update Obelisks");
         var obelisks = Array.from(buildings.filter(b => b.type === 2), f => {
             return {
                 id: f.id,
@@ -115,7 +112,6 @@ function startListenToSocket() {
         });
         global.map.addObelisk(obelisks);
 
-        console.log("Update Libraries");
         var libraries = Array.from(buildings.filter(b => b.type === 3), f => {
             return {
                 id: f.id,
@@ -126,7 +122,6 @@ function startListenToSocket() {
         });
         global.map.addLibrary(libraries);
 
-        console.log("Update Altars");
         var altars = Array.from(buildings.filter(b => b.type === 4), f => {
             return {
                 id: f.id,
@@ -136,7 +131,6 @@ function startListenToSocket() {
         });
         global.map.addAltar(altars);
 
-        console.log("Update Portals");
         var portals = Array.from(buildings.filter(b => b.type === 5), f => {
             return {
                 id: f.id,
