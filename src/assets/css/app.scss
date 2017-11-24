@@ -129,8 +129,8 @@ body, html, .content {
     opacity: 0;
     transition: top 500ms, opacity 500ms;
 
-    width: 60%;
-    height: 63%;
+    width: 90%;
+    height: 90%;
 
     @media #{$medium-and-down} { width: 95%; height: 80%; }
 
@@ -197,7 +197,7 @@ body, html, .content {
 
 .item {
     box-sizing: border-box;
-    width: percentage(1/4);
+    width: percentage(1/10);
     @media #{$medium-and-down} {  width: percentage(1/3); }
 
     padding: .7em;
@@ -280,6 +280,46 @@ body, html, .content {
         z-index: -1;
         left:0;
         top: 0;
+    }
+
+    &.perfect {
+        background: rgba(190,46,44,.2);
+    }
+
+    .imgspan {
+        margin-bottom: 10px;
+    }
+    .imgspan .stat {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        bottom: 0;
+        text-align: center;
+        line-height: 23px;
+        background: #FFF
+    }
+    .imgspan .stat.atk {
+        border: 2px solid #FFC514;
+        left: 20px;
+    }
+    .imgspan .stat.stam {
+        border: 2px solid #BE2E2C;
+        right: 20px;
+    }
+    .imgspan .battle-type {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        top: 0;
+        right: 20px;
+        text-align: center;
+        line-height: 23px;
+    }
+    .imgspan .battle-type img {
+        width: 100%;
+        height: auto;
     }
 }
 
