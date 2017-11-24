@@ -290,7 +290,7 @@ Map.prototype.addArena = function(arenas) {
         var type = "arena";
         var ally = pt.arena.allianceType;
         if (ally) {
-            type += ally===0 ? '_red' : '_blue';
+            type += ally === 0 ? '_red' : '_blue';
         }
 
         if (!pt.marker) {
@@ -552,7 +552,7 @@ L.MarkerCluster.prototype.initialize = function (group, zoom, a, b) {
 
 // Add event for single click
 
-L.Evented.addInitHook( function () {
+L.Evented.addInitHook(function () {
     this._singleClickTimeout = null;
     this.on('click', this._scheduleSingleClick, this);
     this.on('dblclick dragstart zoomstart', this._clearSingleClickTimeout.bind(this), this);
