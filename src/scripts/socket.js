@@ -80,8 +80,8 @@ function startListenToSocket() {
         }
     });
     socket.on('buildings', buildings => {
-        console.log("Update Buildings");
-        console.log(buildings);
+        // console.log("Update Buildings");
+        // console.log(buildings);
         var pillars = Array.from(buildings.filter(b => b.type === 0), f => {
             return {
                 id: f.id,
@@ -171,7 +171,7 @@ function startListenToSocket() {
             name: inventory.getPokemonName(msg.evolution)
         };
         var from = inventory.getPokemonName(msg.pokemon.pokemon_id)
-        creatureToast(info, { title: `A ${from} Evolved` });
+        creatureToast(info, { title: `A ${from} evolved` });
     });
     socket.on("inventory_list", items => {
         console.log(items);
@@ -179,31 +179,11 @@ function startListenToSocket() {
     });
     socket.on("creature_list", msg => {
         console.log(msg);
-        // var pkm = Array.from(msg.creatures, creature => {
-        //     var pkmInfo = global.pokemonSettings[p.pokemon_id - 1] || {};
-        //     return {
-        //         id: p.id,
-        //         pokemonId: p.pokemon_id,
-        //         inGym: p.deployed_fort_id != "",
-        //         isBad: p.is_bad,
-        //         canEvolve: pkmInfo.evolution_ids && pkmInfo.evolution_ids.length > 0,
-        //         cp: p.cp,
-        //         iv: (100.0 * (p.individual_attack + p.individual_defense + p.individual_stamina)/45.0).toFixed(1),
-        //         level: inventory.getPokemonLevel(p),
-        //         name: p.nickname || inventory.getPokemonName(p.pokemon_id),
-        //         candy: (msg.candy[pkmInfo.family_id] || {}).candy || 0,
-        //         candyToEvolve: pkmInfo.candy_to_evolve,
-        //         favorite: p.favorite == 1,
-        //         stats: {
-        //             atk: p.individual_attack,
-        //             def: p.individual_defense,
-        //             hp: p.individual_stamina,
-        //             maxHp: p.stamina_max,
-        //             sta: p.stamina
-        //         }
-        //     };
-        // });
-        global.map.displayCreatureList(msg.creatures, null, msg.eggs_count);
+        var creatures = msg.creatures.map(c => {
+            c.iv = (10 * (c.attackValue + c.staminaValue)).toFixed(0);
+            return c;
+        });
+        global.map.displayCreatureList(creatures, null, msg.eggs_count);
     });
     socket.on("eggs_list", msg => {
         console.log(msg);
@@ -236,7 +216,7 @@ function creatureToast(creature, options) {
     options = options || {};
     var title = options.title || ( global.snipping ? "Snipe success" : "Catch success" );
     var toast = global.snipping ? toastr.success : toastr.info;
-    var creatureInfo = creature.name;
+    var creatureInfo = creature.display;
     if (creature.level) creatureInfo += ` (lvl ${creature.level})`;
 
     let padId = creature.name.toString();

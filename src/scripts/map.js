@@ -273,7 +273,7 @@ Map.prototype.addBuildings = function(forts) {
             var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [30, 30], iconAnchor: [15, 15] });
             pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerPillars);
             if (pt.name) pt.marker.bindPopup(pt.name);
-            else pt.marker.bindPopup(pt.id);
+            else pt.marker.bindPopup('Stop<br />' + pt.id);
         } else {
             pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [30, 30], iconAnchor: [15, 15] }));
         }
@@ -297,7 +297,7 @@ Map.prototype.addArena = function(arenas) {
             var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
             pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerArenas);
             if (pt.name) pt.marker.bindPopup(pt.name);
-            else pt.marker.bindPopup(pt.id);
+            else pt.marker.bindPopup('Arena<br />' + pt.id);
         } else {
             pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
         }
@@ -321,7 +321,7 @@ Map.prototype.addLibrary = function(libraries) {
             var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
             pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerLibraries);
             if (pt.name) pt.marker.bindPopup(pt.name);
-            else pt.marker.bindPopup(pt.id);
+            else pt.marker.bindPopup('Library<br />' + pt.id);
         } else {
             pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
         }
@@ -340,7 +340,7 @@ Map.prototype.addObelisk = function(obelisks) {
             var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
             pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerObelisks);
             if (pt.name) pt.marker.bindPopup(pt.name);
-            else pt.marker.bindPopup(pt.id);
+            else pt.marker.bindPopup('Obelisk<br />' + pt.id);
         } else {
             pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
         }
@@ -359,7 +359,7 @@ Map.prototype.addPortal = function(portals) {
             var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
             pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerPortals);
             if (pt.name) pt.marker.bindPopup(pt.name);
-            else pt.marker.bindPopup(pt.id);
+            else pt.marker.bindPopup('Portal<br />' + pt.id);
         } else {
             pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
         }
@@ -378,7 +378,7 @@ Map.prototype.addAltar = function(altars) {
             var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
             pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerAltars);
             if (pt.name) pt.marker.bindPopup(pt.name);
-            else pt.marker.bindPopup(pt.id);
+            else pt.marker.bindPopup('Altar<br />' + pt.id);
         } else {
             pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
         }
@@ -395,7 +395,7 @@ Map.prototype.setRoute = function(route) {
 }
 
 Map.prototype.displayCreatureList = function(all, sortBy, eggs) {
-    console.log("Crearture list");
+    console.log("Creature list");
     global.active = "creature";
     console.log(all);
     this.creatureList = all || this.creatureList;
@@ -406,7 +406,7 @@ Map.prototype.displayCreatureList = function(all, sortBy, eggs) {
         localStorage.setItem("sortCreatureBy", sortBy);
     }
 
-    if (sortBy == "pokemonId") {
+    if (sortBy === "name") {
         this.creatureList = this.creatureList.sort((p1, p2) => {
             if (p1[sortBy] != p2[sortBy]) {
                 return p1[sortBy] - p2[sortBy];
@@ -418,8 +418,8 @@ Map.prototype.displayCreatureList = function(all, sortBy, eggs) {
         this.creatureList = this.creatureList.sort((p1, p2) => {
             if (p1[sortBy] != p2[sortBy]) {
                 return p2[sortBy] - p1[sortBy];
-            } else if (p1["pokemonId"] != p2["pokemonId"]) {
-                return p1["pokemonId"] - p2["pokemonId"];
+            } else if (p1["name"] != p2["name"]) {
+                return p1["name"] - p2["name"];
             } else {
                 var sort2 = (sortBy == "cp") ? "iv" : "cp";
                 return p2[sort2] - p1[sort2];
@@ -430,21 +430,19 @@ Map.prototype.displayCreatureList = function(all, sortBy, eggs) {
     var total = this.eggsCount + this.creatureList.length;
     $(".inventory .numberinfo").text(`${total}/${global.storage.creatures}`);
     var div = $(".inventory .data");
-    div.html(``);
+    div.html('');
     this.creatureList.forEach(function(elt) {
-        var canEvolve = false; //elt.canEvolve && !elt.inGym && elt.candy >= elt.candyToEvolve;
+        var canEvolve = false; //elt.improvable && !elt.inGym && elt.candy >= elt.candyToEvolve;
         var evolveStyle = canEvolve ? "" : "hide";
         var evolveClass = canEvolve ? "canEvolve" : "";
         var transferClass = elt.favorite ? "hide" : "";
         var candyStyle = elt.canEvolve ? "" : "style='display:none'";
-        var fav = elt.favorite ? "set" : "unset";
-        var hp = Math.round(elt.hp*100)/100;
+        var hp = Math.round(elt.hp * 100)/100;
         var creatureId = String(elt.name);
         creatureId = '0'.repeat(3 - creatureId.length) + creatureId;
         div.append(`
-            <div class="pokemon ${elt.isBad ? 'bad': ''} ${elt.attackValue==5 && elt.staminaValue == 5 ? 'perfekt': ''}">
+            <div class="pokemon ${elt.attackValue === 5 && elt.staminaValue === 5 ? 'perfekt': ''}">
                 <div class="transfer" data-id='${elt.id}'>
-                    <a title='(Un)Favorite' href="#" class="favoriteAction"><img src="./assets/img/favorite_${fav}.png" /></a>
                     <a title='Transfer' href="#" class="transferAction ${transferClass}"><img src="./assets/img/recyclebin.png" /></a>
                     <a title='Evolve' href="#" class="evolveAction ${evolveStyle}"><img src="./assets/img/evolve.png" /></a>
                 </div>
@@ -455,8 +453,8 @@ Map.prototype.displayCreatureList = function(all, sortBy, eggs) {
                     <img src="./assets/creatures/${creatureId}.png" />
                 </span>
                 <span class="name">${elt.display} lvl ${elt.level}</span>
-                <span class="info">CP: <strong>${elt.cp}</strong></span>
-                <span class="info">HP:${hp}</span>
+                <span class="info">CP: <strong>${elt.cp}</strong> IV: <strong>${elt.iv}%</strong></span>
+                <span class="info">HP: ${hp}</span>
                 <span class="info">ID: ${elt.candyType}<span ${candyStyle}>/${elt.candyToEvolve}</span></span>
             </div>
         `);

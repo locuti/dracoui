@@ -56,7 +56,7 @@
             }
         });
 
-        $("#sortBypokemonId").click(() => global.map.displayCreatureList(null, "candyType"));
+        $("#sortBypokemonId").click(() => global.map.displayCreatureList(null, "name"));
         $("#sortBycp").click(() => global.map.displayCreatureList(null, "cp"));
         $("#sortByiv").click(() => global.map.displayCreatureList(null, "iv"));
 
