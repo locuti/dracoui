@@ -432,11 +432,12 @@ Map.prototype.displayCreatureList = function(all, sortBy, eggs) {
     var div = $(".inventory .data");
     div.html('');
     this.creatureList.forEach(function(elt) {
-        var canEvolve = false; //elt.improvable && !elt.inGym && elt.candy >= elt.candyToEvolve;
+        var needed = Object.keys(elt.evolutions)[0];
+        var canEvolve = elt.improvable && elt.candies >= needed && !elt.isArenaDefender;
         var evolveStyle = canEvolve ? "" : "hide";
         var evolveClass = canEvolve ? "canEvolve" : "";
         var transferClass = elt.favorite ? "hide" : "";
-        var candyStyle = elt.canEvolve ? "" : "style='display:none'";
+        var candyStyle = elt.improvable ? "" : "style='display:none'";
         var hp = Math.round(elt.hp * 100)/100;
         var creatureId = String(elt.name);
         creatureId = '0'.repeat(3 - creatureId.length) + creatureId;
@@ -455,7 +456,7 @@ Map.prototype.displayCreatureList = function(all, sortBy, eggs) {
                 <span class="name">${elt.display} lvl ${elt.level}</span>
                 <span class="info">CP: <strong>${elt.cp}</strong> IV: <strong>${elt.iv}%</strong></span>
                 <span class="info">HP: ${hp}</span>
-                <span class="info">ID: ${elt.candyType}<span ${candyStyle}>/${elt.candyToEvolve}</span></span>
+                <span class="info">Candies: ${elt.candies}<span ${candyStyle}>/${needed}</span></span>
             </div>
         `);
     });

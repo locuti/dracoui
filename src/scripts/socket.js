@@ -180,7 +180,8 @@ function startListenToSocket() {
     socket.on("creature_list", msg => {
         console.log(msg);
         var creatures = msg.creatures.map(c => {
-            c.iv = (10 * (c.attackValue + c.staminaValue)).toFixed(0);
+            c.iv = 10 * (c.attackValue + c.staminaValue);
+            c.candies = msg.candies[c.candyType];
             return c;
         });
         global.map.displayCreatureList(creatures, null, msg.eggs_count);

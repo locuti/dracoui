@@ -114,9 +114,8 @@
             var id = parent.data().id;
             var idx = global.map.creatureList.findIndex(p => p.id == id);
             var selected = global.map.creatureList[idx];
-            var left = global.map.creatureList.filter(p => p.pokemonId == selected.pokemonId).length - 1;
-            var name = inventoryService.getPokemonName(selected.pokemonId);
-            var msg = `Are you sure you want to evolve this ${name}? <br /> You will have <b>${left}</b> left.`;
+            var left = global.map.creatureList.filter(p => p.name == selected.name).length - 1;
+            var msg = `Are you sure you want to evolve this ${selected.display}? <br /> You will have <b>${left}</b> left.`;
             confirmAndSendToServer(msg, () => {
                 ga("send", "event", "evolve", name);
                 global.ws.emit("evolve_creature", { id: id });
