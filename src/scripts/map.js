@@ -441,7 +441,7 @@ Map.prototype.displayCreatureList = function(all, sortBy, eggs) {
         var creatureId = String(elt.name);
         creatureId = '0'.repeat(3 - creatureId.length) + creatureId;
         div.append(`
-            <div class="pokemon ${elt.attackValue === 5 && elt.staminaValue === 5 ? 'perfekt': ''}">
+            <div class="pokemon ${elt.attackValue === 5 && elt.staminaValue === 5 ? 'perfect': ''}">
                 <div class="transfer" data-id='${elt.id}'>
                     <a title='Transfer' href="#" class="transferAction ${transferClass}"><img src="./assets/img/recyclebin.png" /></a>
                     <a title='Evolve' href="#" class="evolveAction ${evolveStyle}"><img src="./assets/img/evolve.png" /></a>
