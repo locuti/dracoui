@@ -122,15 +122,6 @@ function startListenToSocket() {
         });
         global.map.addLibrary(libraries);
 
-        var altars = Array.from(buildings.filter(b => b.type === 4), f => {
-            return {
-                id: f.id,
-                lat: f.coords.latitude,
-                lng: f.coords.longitude
-            }
-        });
-        global.map.addAltar(altars);
-
         var portals = Array.from(buildings.filter(b => b.type === 5), f => {
             return {
                 id: f.id,
@@ -138,7 +129,16 @@ function startListenToSocket() {
                 lng: f.coords.longitude
             }
         });
-        global.map.addObelisk(portals);
+        global.map.addPortal(portals);
+
+        var altars = Array.from(buildings.filter(b => b.type === 7), f => {
+            return {
+                id: f.id,
+                lat: f.coords.latitude,
+                lng: f.coords.longitude
+            }
+        });
+        global.map.addAltar(altars);
     });
     socket.on('building_visited', building => {
         console.log("Building Visited");
