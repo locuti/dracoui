@@ -152,7 +152,7 @@ Map.prototype.initPillars = function() {
 Map.prototype.initArenas = function() {
     for (var i = 0; i < this.arenas.length; i++) {
         var pt = this.arenas[i];
-        var iconurl = `./assets/buildings/arena.png`;
+        var iconurl = `./assets/img/arena.png`;
         var icon = L.icon({ iconUrl: iconurl, iconSize: [40, 40], iconAnchor: [20, 20]});
         pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerArenas);
     }
@@ -161,7 +161,7 @@ Map.prototype.initArenas = function() {
 Map.prototype.initLibraries = function() {
     for (var i = 0; i < this.libraries.length; i++) {
         var pt = this.libraries[i];
-        var iconurl = `./assets/buildings/library.png`;
+        var iconurl = `./assets/img/library.png`;
         var icon = L.icon({ iconUrl: iconurl, iconSize: [40, 40], iconAnchor: [20, 20]});
         pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerLibraries);
     }
@@ -170,7 +170,7 @@ Map.prototype.initLibraries = function() {
 Map.prototype.initObelisks = function() {
     for (var i = 0; i < this.obelisks.length; i++) {
         var pt = this.obelisks[i];
-        var iconurl = `./assets/buildings/obelisk.png`;
+        var iconurl = `./assets/img/obelisk.png`;
         var icon = L.icon({ iconUrl: iconurl, iconSize: [40, 40], iconAnchor: [20, 20]});
         pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerObelisks);
     }
@@ -179,7 +179,7 @@ Map.prototype.initObelisks = function() {
 Map.prototype.initPortals = function() {
     for (var i = 0; i < this.portals.length; i++) {
         var pt = this.portals[i];
-        var iconurl = `./assets/buildings/portal.png`;
+        var iconurl = `./assets/img/portal.png`;
         var icon = L.icon({ iconUrl: iconurl, iconSize: [40, 40], iconAnchor: [20, 20]});
         pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerPortals);
     }
@@ -289,7 +289,7 @@ Map.prototype.addArena = function(arenas) {
 
         var type = "arena";
         var ally = pt.arena.allianceType;
-        if (ally) {
+        if (ally!==null) {
             type += ally === 0 ? '_red' : '_blue';
         }
 
@@ -313,7 +313,7 @@ Map.prototype.addLibrary = function(libraries) {
 
         var type = "library";
         var ally = pt.arena.allianceType;
-        if (ally) {
+        if (ally!==null) {
             type += ally===0 ? '_red' : '_blue';
         }
 
@@ -474,11 +474,15 @@ Map.prototype.displayEggsList = function(eggs, max) {
     eggs.forEach(function(elt) {
         if (elt) {
             var img = elt.eggType;
+            var info = ((elt.passedDistance/1000).toFixed(1) + ' / ' + (elt.totalDistance / 1000).toFixed(1)) + ' km';
+            if(elt.isEggForRoost){
+                info = (elt.passedDistance.toFixed(1) + ' / ' + elt.totalDistance.toFixed(1)) + ' h'
+            }
             if (elt.incubatorId !== null) img = 18;
             div.append(`
                 <div class="egg">
                     <span class="imgspan"><img src="./assets/inventory/${img}.png" /></span>
-                    <span>${(elt.passedDistance/1000).toFixed(1)} / ${(elt.totalDistance / 1000).toFixed(1)} km</span>
+                    <span>${info}</span>
                 </div>
             `);
         }
