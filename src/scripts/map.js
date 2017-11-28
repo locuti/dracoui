@@ -263,8 +263,6 @@ Map.prototype.addBuildings = function(forts) {
         var type = "stop_available";
         if (pt.cooldown) {
             type = "stop_cooldown";
-        // } else if (pt.lureExpire && moment(pt.lureExpire).isAfter()) {
-        //     icon = "pokestop_lure";
         } else if (pt.visited) {
             type = "stop_visited";
         }
@@ -289,7 +287,7 @@ Map.prototype.addArena = function(arenas) {
 
         var type = "arena";
         var ally = pt.arena.allianceType;
-        if (ally!==null) {
+        if (ally !== null) {
             type += ally === 0 ? '_red' : '_blue';
         }
 
@@ -313,8 +311,8 @@ Map.prototype.addLibrary = function(libraries) {
 
         var type = "library";
         var ally = pt.arena.allianceType;
-        if (ally!==null) {
-            type += ally===0 ? '_red' : '_blue';
+        if (ally !== null) {
+            type += ally === 0 ? '_red' : '_blue';
         }
 
         if (!pt.marker) {
