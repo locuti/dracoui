@@ -431,11 +431,11 @@ Map.prototype.displayCreatureList = function(all, sortBy, eggs) {
     div.html('');
     this.creatureList.forEach(function(elt) {
         var needed = Object.keys(elt.evolutions)[0];
-        var canEvolve = elt.improvable && elt.candies >= needed && !elt.isArenaDefender;
+        var canEvolve = needed && elt.improvable && elt.candies >= needed && !elt.isArenaDefender;
         var evolveStyle = canEvolve ? "" : "hide";
         var evolveClass = canEvolve ? "canEvolve" : "";
         var transferClass = elt.favorite ? "hide" : "";
-        var candyStyle = elt.improvable ? "" : "style='display:none'";
+        var candyStyle = elt.improvable && needed ? "" : "style='display:none'";
         var hp = Math.round(elt.hp * 100)/100;
         var creatureId = String(elt.name);
         creatureId = '0'.repeat(3 - creatureId.length) + creatureId;

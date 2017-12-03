@@ -118,7 +118,8 @@
             var msg = `Are you sure you want to evolve this ${selected.display}? <br /> You will have <b>${left}</b> left.`;
             confirmAndSendToServer(msg, () => {
                 ga("send", "event", "evolve", name);
-                global.ws.emit("evolve_creature", { id: id });
+                console.log('Evolve ' + id);
+                global.ws.emit("evolve_creature", { id: id, to: Object.values(selected.evolutions)[0] });
                 global.map.creatureList.splice(idx, 1);
                 parent.parent().fadeOut();
             });
