@@ -70,7 +70,7 @@ function startListenToSocket() {
         localStorage.setItem("pokemonSettings", JSON.stringify(global.pokemonSettings));
     });
     socket.on("player_stats", msg => {
-        console.log(msg);
+        // console.log(msg);
         global.player = msg.player;
         $(".player").trigger("pogo:player_update");
     });
