@@ -142,7 +142,7 @@ function startListenToSocket() {
     });
     socket.on('building_visited', building => {
         console.log("Building Visited");
-        console.log(building);
+        // console.log(building);
         global.map.addVisitedBuilding({
             id: building.id,
             name: "",

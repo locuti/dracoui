@@ -213,7 +213,7 @@ Map.prototype.addCatch = function(pt) {
 
     var info = `${pt.display}<br /> CP:${pt.cp}`; // IV:${pt.iv}%`;
     if (pt.level) {
-        info = `${pt.display} (lvl ${pt.level}) <br /> CP:${pt.cp}`; // IV:${pt.iv}%`;
+        info = `${pt.display} (lvl ${(pt.level/2).toFixed(1)}) <br /> CP:${pt.cp}`; // IV:${pt.iv}%`;
     }
 
     this.catches.push(pt);
@@ -451,7 +451,7 @@ Map.prototype.displayCreatureList = function(all, sortBy, eggs) {
                     <div class="battle-type"><img src="./assets/img/${elt.isAttacker ? 'Sword' : 'Shild'}_color.png"/></div>
                     <img src="./assets/creatures/${creatureId}.png" />
                 </span>
-                <span class="name">${elt.display} lvl ${elt.level}</span>
+                <span class="name">${elt.display} lvl ${(elt.level/2).toFixed(1)}</span>
                 <span class="info">CP: <strong>${elt.cp}</strong> IV: <strong>${elt.iv}%</strong></span>
                 <span class="info">HP: ${hp}</span>
                 <span class="info">Candies: ${elt.candies}<span ${candyStyle}>/${needed}</span></span>
