@@ -80,9 +80,9 @@ function startListenToSocket() {
         }
     });
     socket.on('buildings', buildings => {
-        // console.log("Update Buildings");
+        console.log("Update Buildings");
         // console.log(buildings);
-        var pillars = Array.from(buildings.filter(b => b.type === 0), f => {
+        var pillars = Array.from(buildings.filter(b => b.type === 0 || b.type === 6), f => {
             return {
                 id: f.id,
                 lat: f.coords.latitude,
