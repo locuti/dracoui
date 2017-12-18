@@ -57,7 +57,7 @@ function startListenToSocket() {
             global.player = msg.player;
             if (global.player) {
                 $(".player").trigger("pogo:player_update");
-                ga("send", "event", "level", global.player.level);
+                gtag('event', 'level', global.player.level);
             }
             global.storage = msg.storage;
             global.map.addToPath(msg.pos);

@@ -30,11 +30,9 @@
     <script src="scripts/config.js"></script>
     <!-- endbuild -->
     <!-- build:js scripts/bundle.js -->
-    <script src="scripts/inventory.js"></script>
     <script src="scripts/map.js"></script>
     <script src="scripts/socket.js"></script>
     <script src="scripts/app.js"></script>
-    <script src="scripts/analytics.js"></script>
     <!-- endbuild -->
   </head>
   <body>
@@ -73,4 +71,11 @@
       </div>
     </div>
   </body>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108458756-2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-108458756-2');
+  </script>
 </html>

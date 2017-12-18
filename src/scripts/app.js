@@ -25,11 +25,12 @@
     }
 
     $(function() {
-        inventoryService.init(global.config.locale, launchApp);
+        // inventoryService.init(global.config.locale, launchApp);
+        launchApp();
     });
 
     function launchApp() {
-        window.ga = window.ga || function() {};
+        window.gtag = window.gtag || function() {};
 
         var sortBy = localStorage.getItem("sortCreatureBy") || "cp";
         $("#sortBy" + sortBy).addClass("active").siblings().removeClass("active");
@@ -101,7 +102,7 @@
             var left = global.map.creatureList.filter(p => p.name == selected.name).length - 1;
             var msg = `Are you sure you want to transfer this ${selected.display}? <br /> You will have <b>${left}</b> left.`;
             confirmAndSendToServer(msg, () => {
-                ga("send", "event", "transfer", selected.display);
+                gtag("event", "transfer", selected.display);
                 global.ws.emit("transfer_creature", { id: id });
                 global.map.creatureList.splice(idx, 1);
                 parent.parent().fadeOut();
@@ -117,9 +118,9 @@
             var left = global.map.creatureList.filter(p => p.name == selected.name).length - 1;
             var msg = `Are you sure you want to evolve this ${selected.display}? <br /> You will have <b>${left}</b> left.`;
             confirmAndSendToServer(msg, () => {
-                ga("send", "event", "evolve", name);
+                gtag('event', 'evolve', name);
                 console.log('Evolve ' + id);
-                global.ws.emit("evolve_creature", { id: id, to: Object.values(selected.evolutions)[0] });
+                global.ws.emit('evolve_creature', { id: id, to: Object.values(selected.evolutions)[0] });
                 global.map.creatureList.splice(idx, 1);
                 parent.parent().fadeOut();
             });
@@ -133,7 +134,7 @@
             var selected = global.map.creatureList[idx];
             selected.favorite = !selected.favorite;
             var name = inventoryService.getPokemonName(selected.pokemonId);
-            ga("send", "event", "favorite", name);
+            gtag('event', 'favorite', name);
             $(this).find("img").attr('src', `./assets/img/favorite_${selected.favorite ? 'set' : 'unset'}.png`);
             parent.find(".transferAction").toggleClass("hide");
             global.ws.emit("favorite_creature", { id: id, favorite: selected.favorite });
@@ -156,8 +157,8 @@
                 callback: value => {
                     if(value) {
                         var drop = parseInt(value.count);
-                        ga("send", "event", "drop_items", name);
-                        global.ws.emit("drop_items", { id: itemId, count: drop });
+                        gtag('event', 'drop_items', name);
+                        global.ws.emit('drop_items', { id: itemId, count: drop });
                         if (count == drop) {
                             parent.parent().fadeOut();
                         } else {
