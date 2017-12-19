@@ -25,7 +25,6 @@
     }
 
     $(function() {
-        // inventoryService.init(global.config.locale, launchApp);
         launchApp();
     });
 
@@ -133,7 +132,7 @@
             var idx = global.map.creatureList.findIndex(p => p.id == id);
             var selected = global.map.creatureList[idx];
             selected.favorite = !selected.favorite;
-            var name = inventoryService.getPokemonName(selected.pokemonId);
+            var name = selected.display;
             gtag('event', 'favorite', name);
             $(this).find("img").attr('src', `./assets/img/favorite_${selected.favorite ? 'set' : 'unset'}.png`);
             parent.find(".transferAction").toggleClass("hide");
@@ -144,7 +143,7 @@
             event.preventDefault();
             var parent = $(this).parent();
             var itemId = parent.data().id;
-            var name = inventoryService.getItemName(itemId)
+            var name = parent.parent().find('.info').text();
             var count = parent.data().count;
             vex.dialog.confirm({
                 unsafeMessage: `How many <b>${name}</b> would you like to drop?`,

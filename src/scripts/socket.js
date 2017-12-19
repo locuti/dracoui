@@ -1,4 +1,3 @@
-var inventory = window.inventoryService;
 
 function setUserName(user) {
     if (!global.user) {
@@ -119,16 +118,16 @@ function startListenToSocket() {
         global.map.addCatch(creature);
         creatureToast(creature, { ball: creature.ball });
     });
-    socket.on("pokemon_evolved", msg => {
+    socket.on('creature_evolved', msg => {
         //console.log(msg);
         var info = {
             id: msg.evolution,
-            name: inventory.getPokemonName(msg.evolution)
+            name: msg.from.display,
         };
-        var from = inventory.getPokemonName(msg.pokemon.pokemon_id)
+        var from = msg.from.display;
         creatureToast(info, { title: `A ${from} evolved` });
     });
-    socket.on("inventory_list", items => {
+    socket.on('inventory_list', items => {
         console.log(items);
         global.map.displayInventory(items);
     });
