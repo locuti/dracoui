@@ -82,63 +82,18 @@ function startListenToSocket() {
     socket.on('buildings', buildings => {
         console.log("Update Buildings");
         // console.log(buildings);
-        var pillars = Array.from(buildings.filter(b => b.type === 0 || b.type === 6), f => {
+        var buildings = Array.from(buildings.filter(b => b.type >= 0 && b.type <= 8), f => {
             return {
                 id: f.id,
+                type: f.type,
                 lat: f.coords.latitude,
                 lng: f.coords.longitude,
-                cooldown: f.pitstop.cooldown,
+                cooldown: f.pitstop ? f.pitstop.cooldown : null,
                 lureExpire: false, //f.pitstop ? +f.pitstop.lureTimeLeft
-            }
-        });
-        global.map.addBuildings(pillars);
-
-        var arenas = Array.from(buildings.filter(b => b.type === 1), f => {
-            return {
-                id: f.id,
-                lat: f.coords.latitude,
-                lng: f.coords.longitude,
                 arena: f.arena
             }
         });
-        global.map.addArena(arenas);
-
-        var obelisks = Array.from(buildings.filter(b => b.type === 2), f => {
-            return {
-                id: f.id,
-                lat: f.coords.latitude,
-                lng: f.coords.longitude
-            }
-        });
-        global.map.addObelisk(obelisks);
-
-        var libraries = Array.from(buildings.filter(b => b.type === 3), f => {
-            return {
-                id: f.id,
-                lat: f.coords.latitude,
-                lng: f.coords.longitude,
-                arena: f.arena
-            }
-        });
-        global.map.addLibrary(libraries);
-
-        var portals = Array.from(buildings.filter(b => b.type === 5), f => {
-            return {
-                id: f.id,
-                lat: f.coords.latitude,
-                lng: f.coords.longitude
-            }
-        });
-        global.map.addPortal(portals);
-
-        var altars = Array.from(buildings.filter(b => b.type === 7), f => {
-            return {
-                id: f.id,
-                lat: f.coords.latitude,
-                lng: f.coords.longitude
-            }
-        });
-        global.map.addAltar(altars);
+        global.map.addBuildings(buildings);
     });
     socket.on('building_visited', building => {
         console.log("Building Visited");

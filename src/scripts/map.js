@@ -7,17 +7,22 @@ var Map = function(parentDiv) {
     var toner = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png');
     var watercolor = L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg');
 
-    this.layerPillars = new L.LayerGroup();
-    this.layerArenas = new L.LayerGroup();
-    this.layerLibraries = new L.LayerGroup();
-    this.layerObelisks = new L.LayerGroup();
-    this.layerPortals = new L.LayerGroup();
-    this.layerAltars = new L.LayerGroup();
+    this.buildingTypes = [{"name": "Pillar", "layerName": "Pillars", "icon": "stop_available"
+        },{ "name": "Arena", "layerName": "Arenas", "icon": "arena"
+        },{ "name": "Obelisk", "layerName": "Obelisks", "icon": "obelisk"
+        },{ "name": "Library", "layerName": "Libraries", "icon": "library"
+        },{ "name": "Mock", "layerName": "Mocks", "icon": "mock"
+        },{ "name": "Portal", "layerName": "Portals", "icon": "portal"
+        },{ "name": "DungeonPillar", "layerName": "Dungeon Pillars", "icon": "stop_available"
+        },{ "name": "Altar", "layerName": "Altars", "icon": "altar"
+        },{ "name": "Roost", "layerName": "Roosts", "icon": "mother_of_dragons"
+        }];
+
     this.layerCatches = L.markerClusterGroup({ maxClusterRadius: 30 });
     this.layerPath = new L.LayerGroup();
 
     this.map = L.map(parentDiv, {
-        layers: [osm, this.layerPillars, this.layerArenas, this.layerLibraries, this.layerObelisks, this.layerPortals, this.layerCatches, this.layerAltars, this.layerCatches, this.layerPath]
+        layers: [osm, this.layerCatches, this.layerPath]
     });
 
    var baseLayers = {
@@ -29,14 +34,18 @@ var Map = function(parentDiv) {
     };
     var overlays = {
         "Path": this.layerPath,
-        "Pillars": this.layerPillars,
-        "Arenas": this.layerArenas,
-        "Libraries": this.layerLibraries,
-        "Obelisks": this.layerObelisks,
-        "Portals": this.layerPortals,
-        "Altars": this.layerAltars,
         "Catches": this.layerCatches
     };
+
+    this.layerBuildings = [];
+    this.buildings = [];
+    for (var i = 0; i < this.buildingTypes.length; i++) {
+        this.buildings[i] = [];
+        var buildingLayer = new L.LayerGroup();
+        buildingLayer.addTo(this.map);
+        overlays[this.buildingTypes[i].layerName] = buildingLayer;
+        this.layerBuildings.push(buildingLayer);
+    }
 
     // save selected base map on click
     L.control.layers(baseLayers, overlays).addTo(this.map);
@@ -59,16 +68,11 @@ var Map = function(parentDiv) {
 
     this.steps = [];
     this.catches = [];
-    this.pillars = [];
-    this.arenas = [];
-    this.libraries = [];
-    this.obelisks = [];
-    this.portals = [];
-    this.altars = [];
     this.creatureList = [];
 };
 
 Map.prototype.saveContext = function() {
+/*
     var pillars = Array.from(this.pillars, p => {
         return {
             id: p.id,
@@ -77,11 +81,11 @@ Map.prototype.saveContext = function() {
             visited: p.visited
         }
     });
-
+*/
     sessionStorage.setItem("available", true);
     sessionStorage.setItem("steps", JSON.stringify(this.steps));
     sessionStorage.setItem("catches", JSON.stringify(this.catches));
-    sessionStorage.setItem("pillars", JSON.stringify(pillars));
+//    sessionStorage.setItem("pillars", JSON.stringify(pillars));
 }
 
 Map.prototype.loadContext = function() {
@@ -91,15 +95,11 @@ Map.prototype.loadContext = function() {
 
             this.steps = JSON.parse(sessionStorage.getItem("steps")) || [];
             this.catches = JSON.parse(sessionStorage.getItem("catches")) || [];
-            this.pillars = JSON.parse(sessionStorage.getItem("pillars")) || [];
+            //this.pillars = JSON.parse(sessionStorage.getItem("pillars")) || [];
 
             if (this.steps.length > 0) this.initPath();
 
-            this.initPillars();
-            this.initArenas();
-            this.initLibraries();
-            this.initObelisks();
-            this.initPortals();
+            this.initBuildings();
             this.initCatches();
 
             sessionStorage.setItem("available", false);
@@ -140,48 +140,17 @@ Map.prototype.initCatches = function() {
     }
 }
 
-Map.prototype.initPillars = function() {
-    for (var i = 0; i < this.pillars.length; i++) {
-        var pt = this.pillars[i];
-        var iconurl = pt.visited ? `./assets/img/stop_visited.png` : `./assets/img/stop_available.png`;
-        var icon = L.icon({ iconUrl: iconurl, iconSize: [30, 30], iconAnchor: [15, 15]});
-        pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerPillars);
-    }
-}
-
-Map.prototype.initArenas = function() {
-    for (var i = 0; i < this.arenas.length; i++) {
-        var pt = this.arenas[i];
-        var iconurl = `./assets/img/arena.png`;
-        var icon = L.icon({ iconUrl: iconurl, iconSize: [40, 40], iconAnchor: [20, 20]});
-        pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerArenas);
-    }
-}
-
-Map.prototype.initLibraries = function() {
-    for (var i = 0; i < this.libraries.length; i++) {
-        var pt = this.libraries[i];
-        var iconurl = `./assets/img/library.png`;
-        var icon = L.icon({ iconUrl: iconurl, iconSize: [40, 40], iconAnchor: [20, 20]});
-        pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerLibraries);
-    }
-}
-
-Map.prototype.initObelisks = function() {
-    for (var i = 0; i < this.obelisks.length; i++) {
-        var pt = this.obelisks[i];
-        var iconurl = `./assets/img/obelisk.png`;
-        var icon = L.icon({ iconUrl: iconurl, iconSize: [40, 40], iconAnchor: [20, 20]});
-        pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerObelisks);
-    }
-}
-
-Map.prototype.initPortals = function() {
-    for (var i = 0; i < this.portals.length; i++) {
-        var pt = this.portals[i];
-        var iconurl = `./assets/img/portal.png`;
-        var icon = L.icon({ iconUrl: iconurl, iconSize: [40, 40], iconAnchor: [20, 20]});
-        pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).bindPopup(pt.name).addTo(this.layerPortals);
+Map.prototype.initBuildings = function(){
+    for(var x = 0; x < this.buildingTypes.length; x++) {
+        for (var i = 0; i < this.buildings[x].length; i++) {
+            var pt = this.buildings[x][i];
+            var iconurl = pt.visited ? `./assets/img/stop_visited.png` : `./assets/img/${this.buildingTypes[x].icon}.png`;
+            var icon = L.icon({iconUrl: iconurl, iconSize: [30, 30], iconAnchor: [15, 15]});
+            pt.marker = L.marker([pt.lat, pt.lng], {
+                icon: icon,
+                zIndexOffset: 50
+            }).bindPopup(pt.name).addTo(this.layerBuildings[x]);
+        }
     }
 }
 
@@ -235,12 +204,12 @@ Map.prototype.addCatch = function(pt) {
 Map.prototype.addVisitedBuilding = function(pt) {
     if (!pt.lat) return;
 
-    var ps = this.pillars.find(ps => ps.id == pt.id);
+    var ps = this.buildings[0].find(ps => ps.id == pt.id);
     if (!ps) {
-        this.pillars.push(pt);
+        this.buildings[0].push(pt);
         ps = pt;
         var icon = L.icon({ iconUrl: `./assets/img/stop_cooldown.png`, iconSize: [30, 30], iconAnchor: [15, 15] });
-        pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerPillars);
+        pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerBuildings[0]);
     } else {
         Object.assign(ps, pt);
     }
@@ -253,132 +222,32 @@ Map.prototype.addVisitedBuilding = function(pt) {
     }
 }
 
-Map.prototype.addBuildings = function(forts) {
-    for(var i = 0; i < forts.length; i++) {
-        var pt = forts[i];
-        var ps = this.pillars.find(ps => ps.id == pt.id);
+Map.prototype.addBuildings = function(buildings) {
+    for(var i = 0; i < buildings.length; i++) {
+        var pt = buildings[i];
+        var ps = this.buildings[pt.type].find(ps => ps.id == pt.id);
         if (ps) pt = Object.assign(ps, pt);
-        else this.pillars.push(pt);
+        else this.buildings[pt.type].push(pt);
 
-        var type = "stop_available";
+        var type = this.buildingTypes[pt.type].icon;
         if (pt.cooldown) {
             type = "stop_cooldown";
         } else if (pt.visited) {
             type = "stop_visited";
         }
 
+        var ally = pt.arena ? pt.arena.allianceType : null;
+        if (ally !== null) {
+            type += ally === 0 ? '_red' : '_blue';
+        }
+
         if (!pt.marker) {
             var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [30, 30], iconAnchor: [15, 15] });
-            pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerPillars);
+            pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerBuildings[pt.type]);
             if (pt.name) pt.marker.bindPopup(pt.name);
-            else pt.marker.bindPopup('Stop<br />' + pt.id);
+            else pt.marker.bindPopup(this.buildingTypes[pt.type].name+'<br />' + pt.id);
         } else {
             pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [30, 30], iconAnchor: [15, 15] }));
-        }
-    }
-}
-
-Map.prototype.addArena = function(arenas) {
-    for(var i = 0; i < arenas.length; i++) {
-        var pt = arenas[i];
-        var ps = this.arenas.find(ps => ps.id == pt.id);
-        if (ps) pt = Object.assign(ps, pt);
-        else this.arenas.push(pt);
-
-        var type = "arena";
-        var ally = pt.arena.allianceType;
-        if (ally !== null) {
-            type += ally === 0 ? '_red' : '_blue';
-        }
-
-        if (!pt.marker) {
-            var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
-            pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerArenas);
-            if (pt.name) pt.marker.bindPopup(pt.name);
-            else pt.marker.bindPopup('Arena<br />' + pt.id);
-        } else {
-            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
-        }
-    }
-}
-
-Map.prototype.addLibrary = function(libraries) {
-    for(var i = 0; i < libraries.length; i++) {
-        var pt = libraries[i];
-        var ps = this.libraries.find(ps => ps.id == pt.id);
-        if (ps) pt = Object.assign(ps, pt);
-        else this.libraries.push(pt);
-
-        var type = "library";
-        var ally = pt.arena.allianceType;
-        if (ally !== null) {
-            type += ally === 0 ? '_red' : '_blue';
-        }
-
-        if (!pt.marker) {
-            var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
-            pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerLibraries);
-            if (pt.name) pt.marker.bindPopup(pt.name);
-            else pt.marker.bindPopup('Library<br />' + pt.id);
-        } else {
-            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
-        }
-    }
-}
-
-Map.prototype.addObelisk = function(obelisks) {
-    for(var i = 0; i < obelisks.length; i++) {
-        var pt = obelisks[i];
-        var ps = this.obelisks.find(ps => ps.id == pt.id);
-        if (ps) pt = Object.assign(ps, pt);
-        else this.obelisks.push(pt);
-
-        var type = "obelisk";
-        if (!pt.marker) {
-            var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
-            pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerObelisks);
-            if (pt.name) pt.marker.bindPopup(pt.name);
-            else pt.marker.bindPopup('Obelisk<br />' + pt.id);
-        } else {
-            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
-        }
-    }
-}
-
-Map.prototype.addPortal = function(portals) {
-    for(var i = 0; i < portals.length; i++) {
-        var pt = portals[i];
-        var ps = this.portals.find(ps => ps.id == pt.id);
-        if (ps) pt = Object.assign(ps, pt);
-        else this.portals.push(pt);
-
-        var type = "portal";
-        if (!pt.marker) {
-            var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
-            pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerPortals);
-            if (pt.name) pt.marker.bindPopup(pt.name);
-            else pt.marker.bindPopup('Portal<br />' + pt.id);
-        } else {
-            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
-        }
-    }
-}
-
-Map.prototype.addAltar = function(altars) {
-    for(var i = 0; i < altars.length; i++) {
-        var pt = altars[i];
-        var ps = this.altars.find(ps => ps.id == pt.id);
-        if (ps) pt = Object.assign(ps, pt);
-        else this.altars.push(pt);
-
-        var type = "altar";
-        if (!pt.marker) {
-            var icon = L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] });
-            pt.marker = L.marker([pt.lat, pt.lng], {icon: icon, zIndexOffset: 50}).addTo(this.layerAltars);
-            if (pt.name) pt.marker.bindPopup(pt.name);
-            else pt.marker.bindPopup('Altar<br />' + pt.id);
-        } else {
-            pt.marker.setIcon(L.icon({ iconUrl: `./assets/img/${type}.png`, iconSize: [40, 40], iconAnchor: [20, 20] }));
         }
     }
 }
@@ -476,10 +345,16 @@ Map.prototype.displayEggsList = function(eggs, max) {
             if(elt.isEggForRoost){
                 info = (elt.passedDistance.toFixed(1) + ' / ' + elt.totalDistance.toFixed(1)) + ' h'
             }
-            if (elt.incubatorId !== null) img = 18;
+            var imgsrc = `./assets/inventory/${img}.png`;
+            if(elt.incubatorId !== null) {
+                imgsrc = `./assets/img/cocoon.png`;
+                if(elt.isEggForRoost) {
+                    imgsrc = `./assets/img/mod_cocoon.png`;
+                }
+            }
             div.append(`
                 <div class="egg">
-                    <span class="imgspan"><img src="./assets/inventory/${img}.png" /></span>
+                    <span class="imgspan"><img src="${imgsrc}" /></span>
                     <span>${info}</span>
                 </div>
             `);
